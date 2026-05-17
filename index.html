@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keets — by rik.haus</title>
+  <meta name="description" content="Entdeck deine Stadt. Keets ist die neue Art, deine Stadt kennenzulernen – Straße für Straße.">
+  <meta property="og:title" content="Keets — by rik.haus">
+  <meta property="og:description" content="Entdeck deine Stadt. Straße für Straße.">
+  <meta property="og:type" content="website">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ NAV -->
+<header class="nav" id="nav">
+  <a href="#home" class="nav__brand">
+    <span class="brand-rik">rik.haus</span>
+    <span class="brand-sep">×</span>
+    <span class="brand-app">keets</span>
+  </a>
+  <nav class="nav__links" id="nav-links">
+    <button class="btn btn--ghost btn--sm" id="btn-collab" data-key="nav.collab">Zusammenarbeiten</button>
+    <a href="#waitlist" class="btn btn--primary btn--sm" data-key="nav.waitlist">Zur Warteliste</a>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="de">DE</button>
+      <span class="lang-sep">/</span>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
+  </nav>
+  <button class="nav__hamburger" id="nav-hamburger" aria-label="Menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+  </button>
+</header>
+
+
+<!-- ═══════════════════════════════════════════ HERO -->
+<section class="hero" id="home">
+  <div class="hero__content">
+
+    <div class="hero__text">
+      <div class="hero__label">
+        <span class="tag" data-key="hero.label">Jetzt auf Warteliste eintragen</span>
+      </div>
+      <h1 class="hero__title">KEETS</h1>
+      <div class="hero__stat">
+        <span class="hero__stat-city">München</span>
+        <span class="hero__stat-sep">—</span>
+        <span class="hero__stat-pct">4.8% <span data-key="hero.discovered">entdeckt</span></span>
+      </div>
+      <p class="hero__tagline" data-key="hero.tagline">
+        Die neue Art, deine Stadt kennenzulernen.
+      </p>
+      <div class="hero__ctas">
+        <a href="#waitlist" class="btn btn--primary btn--lg" data-key="cta.waitlist">Zur Warteliste</a>
+        <button class="btn btn--outline btn--lg" id="hero-collab-btn" data-key="cta.collab">Zusammenarbeiten</button>
+      </div>
+      <p class="hero__credit">
+        <span data-key="hero.by">Ein Projekt von</span>
+        <a href="https://rik.haus" target="_blank" rel="noopener">rik.haus</a>
+      </p>
+    </div>
+
+    <div class="hero__visual">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="phone__screen">
+
+          <div class="app-header">
+            <span class="app-city">München</span>
+            <span class="app-pct">4.8%</span>
+          </div>
+
+          <div class="app-map">
+            <svg class="map-svg" viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <clipPath id="district-clip">
+                  <polygon points="38,58 65,24 112,18 152,36 168,78 163,142 146,182 104,196 54,186 28,152 22,102"/>
+                </clipPath>
+              </defs>
+
+              <!-- District base -->
+              <polygon class="district-base"
+                points="38,58 65,24 112,18 152,36 168,78 163,142 146,182 104,196 54,186 28,152 22,102"/>
+
+              <!-- Unwalked street grid -->
+              <g clip-path="url(#district-clip)" class="streets">
+                <line x1="0"   y1="68"  x2="200" y2="68"/>
+                <line x1="0"   y1="98"  x2="200" y2="98"/>
+                <line x1="0"   y1="128" x2="200" y2="128"/>
+                <line x1="0"   y1="158" x2="200" y2="158"/>
+                <line x1="48"  y1="0"   x2="48"  y2="260"/>
+                <line x1="78"  y1="0"   x2="78"  y2="260"/>
+                <line x1="108" y1="0"   x2="108" y2="260"/>
+                <line x1="138" y1="0"   x2="138" y2="260"/>
+              </g>
+
+              <!-- Walked path 1 (main trail) -->
+              <path class="walked-path p1"
+                d="M108,18 L108,68 L138,68 L138,98 L108,98 L108,128 L78,128 L78,158 L48,158"
+                clip-path="url(#district-clip)"/>
+
+              <!-- Walked path 2 (branch) -->
+              <path class="walked-path p2"
+                d="M78,98 L48,98 L48,68"
+                clip-path="url(#district-clip)"/>
+
+              <!-- Current position dot -->
+              <circle class="pos-dot" cx="48" cy="158" r="5"/>
+            </svg>
+          </div>
+
+          <div class="app-nav">
+            <div class="app-nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+              <span data-key="app.settings">Settings</span>
+            </div>
+            <div class="app-nav-item app-nav-record">
+              <div class="record-btn"></div>
+              <span data-key="app.record">Record</span>
+            </div>
+            <div class="app-nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <span data-key="app.quests">Quests</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span data-key="hero.scroll">scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════ ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+
+    <div class="about__intro reveal">
+      <span class="section-label" data-key="about.label">Das Konzept</span>
+      <h2 class="section-heading" data-key="about.heading">ENTDECK DEINE STADT</h2>
+      <p class="about__lead" data-key="about.lead">
+        Keets verwandelt jeden Spaziergang in eine Entdeckungsreise. Lauf durch die Straßen deiner Stadt – die Karte enthüllt sich Schritt für Schritt unter deinen Füßen.
+      </p>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal reveal-delay-1">
+        <div class="step__num">01</div>
+        <div class="step__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 4v7l3 3-3 3v3M11 4v7L8 14l3 3v3"/>
+          </svg>
+        </div>
+        <h3 class="step__title" data-key="step1.title">Lauf los</h3>
+        <p class="step__text" data-key="step1.text">Öffne die App und starte die Aufzeichnung. Zu Fuß, mit dem Rad oder den Öffis – jeder Weg zählt.</p>
+      </div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step__num">02</div>
+        <div class="step__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M3 9h18M9 21V9"/>
+          </svg>
+        </div>
+        <h3 class="step__title" data-key="step2.title">Enthüll die Karte</h3>
+        <p class="step__text" data-key="step2.text">Jede Straße, die du begehst, leuchtet auf der Karte auf. Sieh in Echtzeit, welche Viertel du schon kennst.</p>
+      </div>
+      <div class="step reveal reveal-delay-3">
+        <div class="step__num">03</div>
+        <div class="step__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/>
+            <path d="M8 12v8l4-2 4 2v-8"/>
+          </svg>
+        </div>
+        <h3 class="step__title" data-key="step3.title">Complette Viertel</h3>
+        <p class="step__text" data-key="step3.text">Schaff es, ganze Stadtteile zu erkunden. Setze dir Challenges und entdecke Orte, die du noch nie besucht hast.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════ MISSION -->
+<section class="mission" id="mission">
+
+  <!-- Decorative background layer -->
+  <div class="mission__bg" aria-hidden="true">
+    <div class="mission__bg-rings">
+      <div class="mission__ring mission__ring--1"></div>
+      <div class="mission__ring mission__ring--2"></div>
+      <div class="mission__ring mission__ring--3"></div>
+    </div>
+    <div class="mission__bg-dots"></div>
+    <div class="mission__bg-cross">
+      <div class="mission__cross-h"></div>
+      <div class="mission__cross-v"></div>
+    </div>
+    <div class="mission__bg-dot-red"></div>
+  </div>
+
+  <div class="container">
+    <div class="mission__inner reveal">
+      <div class="mission__text">
+        <span class="section-label" data-key="mission.label">rik.haus</span>
+        <h2 class="section-heading" data-key="mission.heading">BOUTIQUE CONTENT FÜR HÄUSER NERDS</h2>
+        <p data-key="mission.p1">
+          Rik.haus ist Eriks Plattform für alles, was mit Stadt zu tun hat — Immobilien, Architektur, Stadtentwicklung und jetzt auch Apps. No slop. Nur echte Geschichten aus echten Städten.
+        </p>
+        <p data-key="mission.p2">
+          Keets ist das erste Produkt aus dem rik.haus Universum. Gebaut von jemandem, der selbst durch Städte läuft und wissen will: wie viel habe ich schon gesehen?
+        </p>
+        <a href="https://rik.haus" target="_blank" rel="noopener" class="btn btn--outline btn--sm">
+          rik.haus ↗
+        </a>
+      </div>
+      <div class="mission__accent" aria-hidden="true">
+        <div class="mission__badge">
+          <span>never</span>
+          <span>slop</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════ WAITLIST -->
+<section class="waitlist" id="waitlist">
+  <div class="container">
+    <div class="waitlist__inner">
+
+      <div class="waitlist__intro reveal">
+        <span class="section-label" data-key="waitlist.label">Early Access</span>
+        <h2 class="section-heading" data-key="waitlist.heading">AUF DIE WARTELISTE</h2>
+        <p data-key="waitlist.lead">
+          Sei dabei, wenn Keets an den Start geht. Trag dich jetzt ein und bekomm frühzeitigen Zugang.
+        </p>
+        <div class="waitlist__cities">
+          <span class="city-tag">München</span>
+          <span class="city-tag">Berlin</span>
+          <span class="city-tag">+ more</span>
+        </div>
+      </div>
+
+      <div class="form-wrap reveal reveal-delay-1" id="waitlist-form-wrap">
+        <!-- Form -->
+        <form class="form" id="waitlist-form" novalidate>
+          <div class="form__group">
+            <label class="form__label" for="wl-email" data-key="form.email">E-Mail-Adresse</label>
+            <input class="form__input" type="email" id="wl-email" name="email" required
+              placeholder="deine@email.com" autocomplete="email">
+          </div>
+          <div class="form__group">
+            <label class="form__label" data-key="form.access">Ich möchte auf die Warteliste für</label>
+            <div class="form__radio-group">
+              <label class="form__radio">
+                <input type="radio" name="access" value="app" required>
+                <span class="form__radio-custom"></span>
+                <span class="form__radio-label" data-key="form.app">Die fertige App</span>
+              </label>
+              <label class="form__radio">
+                <input type="radio" name="access" value="beta">
+                <span class="form__radio-custom"></span>
+                <span class="form__radio-label" data-key="form.beta">Beta über TestFlight</span>
+              </label>
+            </div>
+          </div>
+          <div class="form__group">
+            <label class="form__label" data-key="form.platform">Ich nutze</label>
+            <div class="form__radio-group form__radio-group--row">
+              <label class="form__radio">
+                <input type="radio" name="platform" value="ios" required>
+                <span class="form__radio-custom"></span>
+                <span class="form__radio-label">iOS</span>
+              </label>
+              <label class="form__radio">
+                <input type="radio" name="platform" value="android">
+                <span class="form__radio-custom"></span>
+                <span class="form__radio-label">Android</span>
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn--primary btn--lg btn--full" id="wl-submit">
+            <span class="btn-text" data-key="form.submit">Eintragen</span>
+            <span class="btn-loading" hidden>
+              <span class="loading-dot"></span>
+              <span class="loading-dot"></span>
+              <span class="loading-dot"></span>
+            </span>
+          </button>
+          <p class="form__note" data-key="form.privacy">Keine Spam. Nur wichtige Updates.</p>
+        </form>
+
+        <!-- Success state -->
+        <div class="form-success" id="waitlist-success" hidden>
+          <div class="form-success__check">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3 class="form-success__title" data-key="success.title">Du bist dabei!</h3>
+          <p class="form-success__text" data-key="success.text">Wir melden uns, wenn Keets startet. Bis bald auf den Straßen.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════ FOOTER -->
+<footer class="footer" id="links">
+  <div class="container">
+    <div class="footer__top">
+      <a href="#home" class="footer__brand">
+        <span class="brand-rik">rik.haus</span>
+        <span class="brand-sep">×</span>
+        <span class="brand-app">keets</span>
+      </a>
+      <div class="footer__links">
+        <a href="https://instagram.com/rik.haus" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://rik.haus" target="_blank" rel="noopener">rik.haus</a>
+        <button class="footer__link-btn" id="footer-collab-btn" data-key="footer.collab">Zusammenarbeiten</button>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__copy" data-key="footer.copy">© 2025 rik.haus. Alle Rechte vorbehalten.</p>
+      <p class="footer__tagline" data-key="footer.tagline">never slop ✕</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════ MODAL: COLLABORATE -->
+<div class="modal" id="modal-collab" role="dialog" aria-modal="true" aria-labelledby="collab-modal-title" hidden>
+  <div class="modal__backdrop" id="modal-backdrop"></div>
+  <div class="modal__box">
+    <button class="modal__close" id="modal-close" aria-label="Schließen">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <span class="section-label" data-key="modal.label">Anfrage</span>
+    <h2 class="modal__title" id="collab-modal-title" data-key="modal.title">ZUSAMMENARBEITEN</h2>
+    <p class="modal__lead" data-key="modal.lead">Hast du ein Projekt für rik.haus oder Keets? Meld dich.</p>
+
+    <form class="form form--light" id="collab-form" novalidate>
+      <div class="form__group">
+        <label class="form__label" data-key="collab.who">Hallo! Ich repräsentiere...</label>
+        <div class="form__radio-group">
+          <label class="form__radio">
+            <input type="radio" name="who" value="company" required>
+            <span class="form__radio-custom"></span>
+            <span class="form__radio-label" data-key="collab.company">Ein Unternehmen</span>
+          </label>
+          <label class="form__radio">
+            <input type="radio" name="who" value="agency">
+            <span class="form__radio-custom"></span>
+            <span class="form__radio-label" data-key="collab.agency">Eine Social Media Agentur</span>
+          </label>
+          <label class="form__radio">
+            <input type="radio" name="who" value="other">
+            <span class="form__radio-custom"></span>
+            <span class="form__radio-label" data-key="collab.other">Sonstiges</span>
+          </label>
+        </div>
+      </div>
+      <div class="form__group">
+        <label class="form__label" for="collab-email" data-key="form.email">E-Mail-Adresse</label>
+        <input class="form__input" type="email" id="collab-email" name="email" required
+          placeholder="deine@email.com" autocomplete="email">
+      </div>
+      <div class="form__group">
+        <label class="form__label" for="collab-msg" data-key="collab.message">Kurze Nachricht (optional)</label>
+        <textarea class="form__input form__textarea" id="collab-msg" name="message" rows="3"
+          placeholder="Worum geht's?"></textarea>
+      </div>
+      <button type="submit" class="btn btn--primary btn--lg btn--full" id="collab-submit">
+        <span class="btn-text" data-key="collab.submit">Anfrage senden</span>
+        <span class="btn-loading" hidden>
+          <span class="loading-dot"></span>
+          <span class="loading-dot"></span>
+          <span class="loading-dot"></span>
+        </span>
+      </button>
+    </form>
+
+    <!-- Success -->
+    <div class="form-success form-success--light" id="collab-success" hidden>
+      <div class="form-success__check">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 class="form-success__title" data-key="collab.success.title">Nachricht erhalten!</h3>
+      <p class="form-success__text" data-key="collab.success.text">Erik meldet sich in Kürze bei dir.</p>
+    </div>
+
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+</body>
+</html>
