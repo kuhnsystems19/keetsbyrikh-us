@@ -7,16 +7,16 @@
   /* Colors */
   --cream:       #F4F0EA;
   --cream-dark:  #EDE8DF;
-  --red:         #C62200;
-  --red-hover:   #A81C00;
+  --red:         #FF3450;
+  --red-hover:   #D42840;
   --black:       #1C1A18;
   --gray:        #7A7570;
   --gray-light:  #B8B2AA;
   --line:        #DDD8D0;
 
   /* App UI */
-  --app-bg:      #0A0A0A;
-  --app-red:     #C62200;
+  --app-bg:      #0d1117;
+  --app-red:     #FF3450;
 
   /* Type */
   --font-display: 'Bebas Neue', sans-serif;
@@ -271,6 +271,14 @@ input, textarea { font: inherit; }
   margin: 0;
 }
 
+.hero__slogan {
+  font-family: var(--font-display);
+  font-size: clamp(14px, 2vw, 22px);
+  letter-spacing: 0.14em;
+  color: var(--red);
+  margin-top: -14px;
+}
+
 .hero__stat {
   display: flex;
   align-items: center;
@@ -278,7 +286,7 @@ input, textarea { font: inherit; }
   font-size: 13px;
   font-weight: 500;
   color: var(--gray);
-  margin-top: -8px;
+  margin-top: -4px;
 }
 .hero__stat-city { color: var(--black); font-weight: 600; }
 .hero__stat-sep  { color: var(--line); }
@@ -393,13 +401,27 @@ input, textarea { font: inherit; }
 
 /* SVG map styles */
 .district-base {
-  fill: white;
-  opacity: 0.92;
+  fill: #243347;
+  opacity: 1;
 }
 
 .streets line {
-  stroke: rgba(0,0,0,0.25);
+  stroke: rgba(255,255,255,0.10);
   stroke-width: 0.6;
+}
+
+.fog-overlay {
+  fill: #0d1117;
+  opacity: 0.86;
+}
+
+/* Fog-clearing animation: one cell slowly reveals itself */
+.fog-clear-anim {
+  animation: fog-clear 2.8s ease-in-out 5.8s infinite alternate;
+}
+@keyframes fog-clear {
+  from { fill: white; }
+  to   { fill: black; }
 }
 
 .walked-path {
@@ -467,7 +489,7 @@ input, textarea { font: inherit; }
   height: 30px;
   border-radius: 50%;
   background: var(--app-red);
-  box-shadow: 0 0 14px rgba(198,34,0,0.55);
+  box-shadow: 0 0 14px rgba(255,52,80,0.55);
 }
 
 /* Scroll hint */
@@ -553,10 +575,54 @@ input, textarea { font: inherit; }
   line-height: 1.75;
 }
 
+/* ── Features ────────────────────────────────────────────────────── */
+.features {
+  background: var(--cream);
+  padding: var(--sp-3xl) 0;
+}
+
+.features__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-lg);
+}
+
+.feature-card {
+  background: var(--cream-dark);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: var(--sp-xl) var(--sp-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+}
+
+.feature-card__icon {
+  width: 52px;
+  height: 52px;
+  color: var(--red);
+  flex-shrink: 0;
+}
+.feature-card__icon svg { width: 100%; height: 100%; }
+
+.feature-card__title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  letter-spacing: 0.02em;
+  line-height: 1.05;
+  margin-bottom: 6px;
+}
+
+.feature-card__text {
+  font-size: 16px;
+  color: var(--gray);
+  line-height: 1.75;
+}
+
 /* ── Mission ─────────────────────────────────────────────────────── */
 .mission {
   padding: var(--sp-3xl) 0;
-  background: var(--cream);
+  background: var(--cream-dark);
   position: relative;
   overflow: hidden;
 }
@@ -568,7 +634,7 @@ input, textarea { font: inherit; }
   pointer-events: none;
 }
 
-/* Concentric rings — right side, echoing district boundary circles */
+/* Concentric rings */
 .mission__bg-rings {
   position: absolute;
   right: -80px;
@@ -604,11 +670,11 @@ input, textarea { font: inherit; }
 }
 
 @keyframes ring-breathe {
-  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity-mult: 1; }
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
   50%       { transform: translate(-50%, -50%) scale(1.05); }
 }
 
-/* Dot grid — bottom left */
+/* Dot grid */
 .mission__bg-dots {
   position: absolute;
   left: 0;
@@ -621,7 +687,7 @@ input, textarea { font: inherit; }
   mask-image: linear-gradient(to top right, rgba(0,0,0,0.6) 0%, transparent 80%);
 }
 
-/* Street-cross accent — thin crosshair lines near center-right */
+/* Street-cross accent */
 .mission__bg-cross {
   position: absolute;
   right: 28%;
@@ -691,7 +757,7 @@ input, textarea { font: inherit; }
   margin-bottom: var(--sp-md);
 }
 
-/* Badge — slow continuous spin, pauses on hover */
+/* Badge */
 .mission__badge {
   width: 156px;
   height: 156px;
@@ -710,14 +776,14 @@ input, textarea { font: inherit; }
   will-change: transform;
 }
 
-/* ── Waitlist ─────────────────────────────────────────────────────── */
+/* ── Founding Access ──────────────────────────────────────────────── */
 .waitlist {
   background: var(--black);
   padding: var(--sp-3xl) 0;
   color: white;
 }
 
-.waitlist .section-label   { color: #FF5533; }
+.waitlist .section-label   { color: var(--red); }
 .waitlist .section-heading { color: white; }
 
 .waitlist__inner {
@@ -761,6 +827,13 @@ input, textarea { font: inherit; }
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* Two-column row for name fields */
+.form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
 .form__label {
@@ -1028,6 +1101,8 @@ input, textarea { font: inherit; }
 
   .steps { grid-template-columns: 1fr; max-width: 480px; }
 
+  .features__grid { grid-template-columns: 1fr; max-width: 560px; }
+
   .mission__inner { grid-template-columns: 1fr; }
   .mission__badge { display: none; }
 
@@ -1057,6 +1132,8 @@ input, textarea { font: inherit; }
   }
   .nav__links.open { display: flex; }
   .nav__hamburger  { display: flex; }
+
+  .form__row { grid-template-columns: 1fr; }
 
   .footer__top    { flex-direction: column; gap: var(--sp-md); text-align: center; }
   .footer__bottom { flex-direction: column; gap: 8px; text-align: center; }

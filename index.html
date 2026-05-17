@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Keets — by rik.haus</title>
-  <meta name="description" content="Entdeck deine Stadt. Keets ist die neue Art, deine Stadt kennenzulernen – Straße für Straße.">
+  <meta name="description" content="Entdeck deine Stadt. Keets legt einen Nebel über deine Karte – und hebt ihn auf, während du läufst.">
   <meta property="og:title" content="Keets — by rik.haus">
-  <meta property="og:description" content="Entdeck deine Stadt. Straße für Straße.">
+  <meta property="og:description" content="Explore. Reveal. Conquer.">
   <meta property="og:type" content="website">
 
   <!-- Fonts -->
@@ -27,7 +27,7 @@
   </a>
   <nav class="nav__links" id="nav-links">
     <button class="btn btn--ghost btn--sm" id="btn-collab" data-key="nav.collab">Zusammenarbeiten</button>
-    <a href="#waitlist" class="btn btn--primary btn--sm" data-key="nav.waitlist">Zur Warteliste</a>
+    <a href="#founding-access" class="btn btn--primary btn--sm" data-key="nav.waitlist">Founding Access</a>
     <div class="lang-toggle">
       <button class="lang-btn active" data-lang="de">DE</button>
       <span class="lang-sep">/</span>
@@ -47,9 +47,10 @@
 
     <div class="hero__text">
       <div class="hero__label">
-        <span class="tag" data-key="hero.label">Jetzt auf Warteliste eintragen</span>
+        <span class="tag" data-key="hero.label">Founding Access · iOS &amp; Android</span>
       </div>
       <h1 class="hero__title">KEETS</h1>
+      <p class="hero__slogan">EXPLORE. REVEAL. CONQUER.</p>
       <div class="hero__stat">
         <span class="hero__stat-city">München</span>
         <span class="hero__stat-sep">—</span>
@@ -59,7 +60,7 @@
         Die neue Art, deine Stadt kennenzulernen.
       </p>
       <div class="hero__ctas">
-        <a href="#waitlist" class="btn btn--primary btn--lg" data-key="cta.waitlist">Zur Warteliste</a>
+        <a href="#founding-access" class="btn btn--primary btn--lg" data-key="cta.waitlist">Founding Access anfragen</a>
         <button class="btn btn--outline btn--lg" id="hero-collab-btn" data-key="cta.collab">Zusammenarbeiten</button>
       </div>
       <p class="hero__credit">
@@ -75,7 +76,7 @@
 
           <div class="app-header">
             <span class="app-city">München</span>
-            <span class="app-pct">4.8%</span>
+            <span class="app-pct">4.8% entdeckt</span>
           </div>
 
           <div class="app-map">
@@ -84,13 +85,29 @@
                 <clipPath id="district-clip">
                   <polygon points="38,58 65,24 112,18 152,36 168,78 163,142 146,182 104,196 54,186 28,152 22,102"/>
                 </clipPath>
+
+                <!-- Fog mask: white = fog visible, black = cleared -->
+                <mask id="fog-mask">
+                  <rect x="0" y="0" width="200" height="260" fill="white"/>
+                  <!-- Cleared cells along walked paths -->
+                  <rect x="108" y="18"  width="30" height="50" fill="black"/>
+                  <rect x="108" y="68"  width="30" height="30" fill="black"/>
+                  <rect x="78"  y="68"  width="30" height="30" fill="black"/>
+                  <rect x="78"  y="98"  width="30" height="30" fill="black"/>
+                  <rect x="78"  y="128" width="30" height="30" fill="black"/>
+                  <rect x="48"  y="128" width="30" height="30" fill="black"/>
+                  <rect x="48"  y="68"  width="30" height="30" fill="black"/>
+                  <rect x="48"  y="98"  width="30" height="30" fill="black"/>
+                  <!-- Animating cell: clears after paths are drawn -->
+                  <rect x="48" y="158" width="30" height="28" class="fog-clear-anim" fill="white"/>
+                </mask>
               </defs>
 
-              <!-- District base -->
+              <!-- District base (dark map tile) -->
               <polygon class="district-base"
                 points="38,58 65,24 112,18 152,36 168,78 163,142 146,182 104,196 54,186 28,152 22,102"/>
 
-              <!-- Unwalked street grid -->
+              <!-- Street grid -->
               <g clip-path="url(#district-clip)" class="streets">
                 <line x1="0"   y1="68"  x2="200" y2="68"/>
                 <line x1="0"   y1="98"  x2="200" y2="98"/>
@@ -101,6 +118,12 @@
                 <line x1="108" y1="0"   x2="108" y2="260"/>
                 <line x1="138" y1="0"   x2="138" y2="260"/>
               </g>
+
+              <!-- Fog overlay (masked to show only uncleared areas) -->
+              <rect x="0" y="0" width="200" height="260"
+                class="fog-overlay"
+                clip-path="url(#district-clip)"
+                mask="url(#fog-mask)"/>
 
               <!-- Walked path 1 (main trail) -->
               <path class="walked-path p1"
@@ -152,7 +175,7 @@
       <span class="section-label" data-key="about.label">Das Konzept</span>
       <h2 class="section-heading" data-key="about.heading">ENTDECK DEINE STADT</h2>
       <p class="about__lead" data-key="about.lead">
-        Keets verwandelt jeden Spaziergang in eine Entdeckungsreise. Lauf durch die Straßen deiner Stadt – die Karte enthüllt sich Schritt für Schritt unter deinen Füßen.
+        Keets legt einen Nebel über deine Karte – und hebt ihn auf, während du läufst. Straße für Straße, Viertel für Viertel.
       </p>
     </div>
 
@@ -175,8 +198,8 @@
             <path d="M3 9h18M9 21V9"/>
           </svg>
         </div>
-        <h3 class="step__title" data-key="step2.title">Enthüll die Karte</h3>
-        <p class="step__text" data-key="step2.text">Jede Straße, die du begehst, leuchtet auf der Karte auf. Sieh in Echtzeit, welche Viertel du schon kennst.</p>
+        <h3 class="step__title" data-key="step2.title">Heb den Nebel</h3>
+        <p class="step__text" data-key="step2.text">Jede Straße, die du begehst, leuchtet auf der Karte auf. Sieh in Echtzeit, welche Viertel du schon kennst – und wie viel noch im Dunkeln liegt.</p>
       </div>
       <div class="step reveal reveal-delay-3">
         <div class="step__num">03</div>
@@ -186,11 +209,52 @@
             <path d="M8 12v8l4-2 4 2v-8"/>
           </svg>
         </div>
-        <h3 class="step__title" data-key="step3.title">Complette Viertel</h3>
-        <p class="step__text" data-key="step3.text">Schaff es, ganze Stadtteile zu erkunden. Setze dir Challenges und entdecke Orte, die du noch nie besucht hast.</p>
+        <h3 class="step__title" data-key="step3.title">Quests abschließen</h3>
+        <p class="step__text" data-key="step3.text">Wähle ein Viertel als Quest. Verfolge deinen Fortschritt live. Erreich die 100% und hak das Viertel ab.</p>
       </div>
     </div>
 
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════ FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="features__grid">
+
+      <!-- Privacy card -->
+      <div class="feature-card reveal">
+        <div class="feature-card__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </div>
+        <div>
+          <h3 class="feature-card__title" data-key="feature1.title">Deine Daten. Nur auf deinem Gerät.</h3>
+          <p class="feature-card__text" data-key="feature1.text">Kein Cloud-Upload. Kein Tracking. Deine erkundete Route gehört nur dir — sie verlässt dein Telefon nie.</p>
+        </div>
+      </div>
+
+      <!-- Quests card -->
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-card__icon">
+          <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="30" r="22" stroke="currentColor" stroke-opacity="0.18" stroke-width="3.5"/>
+            <circle cx="30" cy="30" r="22" stroke="currentColor" stroke-width="3.5"
+              stroke-dasharray="90 48" stroke-linecap="round"
+              transform="rotate(-90 30 30)"/>
+            <text x="30" y="35" text-anchor="middle" fill="currentColor" font-size="11" font-weight="700" font-family="system-ui, sans-serif">65%</text>
+          </svg>
+        </div>
+        <div>
+          <h3 class="feature-card__title" data-key="feature2.title">Quests. Viertel. 100%.</h3>
+          <p class="feature-card__text" data-key="feature2.text">Such dir ein Stadtviertel als Quest. Keets trackt deinen Fortschritt live. Erreich die 100% — dann nimm dir das nächste vor.</p>
+        </div>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -239,46 +303,43 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════════ WAITLIST -->
-<section class="waitlist" id="waitlist">
+<!-- ═══════════════════════════════════════════ FOUNDING ACCESS -->
+<section class="waitlist" id="founding-access">
   <div class="container">
     <div class="waitlist__inner">
 
       <div class="waitlist__intro reveal">
-        <span class="section-label" data-key="waitlist.label">Early Access</span>
-        <h2 class="section-heading" data-key="waitlist.heading">AUF DIE WARTELISTE</h2>
+        <span class="section-label" data-key="waitlist.label">Founding Access</span>
+        <h2 class="section-heading" data-key="waitlist.heading">FOUNDING ACCESS</h2>
         <p data-key="waitlist.lead">
-          Sei dabei, wenn Keets an den Start geht. Trag dich jetzt ein und bekomm frühzeitigen Zugang.
+          Keets ist geschlossen. Founding Members erhalten frühzeitigen Zugang — und können drei Freunde direkt mitbringen.
         </p>
         <div class="waitlist__cities">
-          <span class="city-tag">München</span>
-          <span class="city-tag">Berlin</span>
-          <span class="city-tag">+ more</span>
+          <span class="city-tag" data-key="founding.benefit1">3 Monate gratis</span>
+          <span class="city-tag" data-key="founding.benefit2">3 Invite Codes</span>
+          <span class="city-tag" data-key="founding.benefit3">iOS · Android</span>
         </div>
       </div>
 
-      <div class="form-wrap reveal reveal-delay-1" id="waitlist-form-wrap">
+      <div class="form-wrap reveal reveal-delay-1" id="founding-form-wrap">
         <!-- Form -->
-        <form class="form" id="waitlist-form" novalidate>
-          <div class="form__group">
-            <label class="form__label" for="wl-email" data-key="form.email">E-Mail-Adresse</label>
-            <input class="form__input" type="email" id="wl-email" name="email" required
-              placeholder="deine@email.com" autocomplete="email">
+        <form class="form" id="founding-form" novalidate>
+          <div class="form__row">
+            <div class="form__group">
+              <label class="form__label" for="fa-firstname" data-key="form.firstname">Vorname</label>
+              <input class="form__input" type="text" id="fa-firstname" name="firstname" required
+                placeholder="Max" autocomplete="given-name">
+            </div>
+            <div class="form__group">
+              <label class="form__label" for="fa-lastname" data-key="form.lastname">Nachname</label>
+              <input class="form__input" type="text" id="fa-lastname" name="lastname" required
+                placeholder="Mustermann" autocomplete="family-name">
+            </div>
           </div>
           <div class="form__group">
-            <label class="form__label" data-key="form.access">Ich möchte auf die Warteliste für</label>
-            <div class="form__radio-group">
-              <label class="form__radio">
-                <input type="radio" name="access" value="app" required>
-                <span class="form__radio-custom"></span>
-                <span class="form__radio-label" data-key="form.app">Die fertige App</span>
-              </label>
-              <label class="form__radio">
-                <input type="radio" name="access" value="beta">
-                <span class="form__radio-custom"></span>
-                <span class="form__radio-label" data-key="form.beta">Beta über TestFlight</span>
-              </label>
-            </div>
+            <label class="form__label" for="fa-email" data-key="form.email">E-Mail-Adresse</label>
+            <input class="form__input" type="email" id="fa-email" name="email" required
+              placeholder="deine@email.com" autocomplete="email">
           </div>
           <div class="form__group">
             <label class="form__label" data-key="form.platform">Ich nutze</label>
@@ -295,24 +356,24 @@
               </label>
             </div>
           </div>
-          <button type="submit" class="btn btn--primary btn--lg btn--full" id="wl-submit">
-            <span class="btn-text" data-key="form.submit">Eintragen</span>
+          <button type="submit" class="btn btn--primary btn--lg btn--full" id="founding-submit">
+            <span class="btn-text" data-key="form.submit">Zugang anfragen</span>
             <span class="btn-loading" hidden>
               <span class="loading-dot"></span>
               <span class="loading-dot"></span>
               <span class="loading-dot"></span>
             </span>
           </button>
-          <p class="form__note" data-key="form.privacy">Keine Spam. Nur wichtige Updates.</p>
+          <p class="form__note" data-key="form.privacy">Wir prüfen deinen Antrag und schicken dir deinen Invite Code per E-Mail.</p>
         </form>
 
         <!-- Success state -->
-        <div class="form-success" id="waitlist-success" hidden>
+        <div class="form-success" id="founding-success" hidden>
           <div class="form-success__check">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <h3 class="form-success__title" data-key="success.title">Du bist dabei!</h3>
-          <p class="form-success__text" data-key="success.text">Wir melden uns, wenn Keets startet. Bis bald auf den Straßen.</p>
+          <h3 class="form-success__title" data-key="success.title">Anfrage eingegangen!</h3>
+          <p class="form-success__text" data-key="success.text">Wir melden uns per E-Mail mit deinem Invite Code. Bis bald auf den Straßen.</p>
         </div>
       </div>
 
