@@ -80,64 +80,7 @@
           </div>
 
           <div class="app-map">
-            <svg class="map-svg" viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <defs>
-                <clipPath id="district-clip">
-                  <polygon points="38,58 65,24 112,18 152,36 168,78 163,142 146,182 104,196 54,186 28,152 22,102"/>
-                </clipPath>
-
-                <!-- Fog mask: white = fog visible, black = cleared -->
-                <mask id="fog-mask">
-                  <rect x="0" y="0" width="200" height="260" fill="white"/>
-                  <!-- Cleared cells along walked paths -->
-                  <rect x="108" y="18"  width="30" height="50" fill="black"/>
-                  <rect x="108" y="68"  width="30" height="30" fill="black"/>
-                  <rect x="78"  y="68"  width="30" height="30" fill="black"/>
-                  <rect x="78"  y="98"  width="30" height="30" fill="black"/>
-                  <rect x="78"  y="128" width="30" height="30" fill="black"/>
-                  <rect x="48"  y="128" width="30" height="30" fill="black"/>
-                  <rect x="48"  y="68"  width="30" height="30" fill="black"/>
-                  <rect x="48"  y="98"  width="30" height="30" fill="black"/>
-                  <!-- Animating cell: clears after paths are drawn -->
-                  <rect x="48" y="158" width="30" height="28" class="fog-clear-anim" fill="white"/>
-                </mask>
-              </defs>
-
-              <!-- District base (dark map tile) -->
-              <polygon class="district-base"
-                points="38,58 65,24 112,18 152,36 168,78 163,142 146,182 104,196 54,186 28,152 22,102"/>
-
-              <!-- Street grid -->
-              <g clip-path="url(#district-clip)" class="streets">
-                <line x1="0"   y1="68"  x2="200" y2="68"/>
-                <line x1="0"   y1="98"  x2="200" y2="98"/>
-                <line x1="0"   y1="128" x2="200" y2="128"/>
-                <line x1="0"   y1="158" x2="200" y2="158"/>
-                <line x1="48"  y1="0"   x2="48"  y2="260"/>
-                <line x1="78"  y1="0"   x2="78"  y2="260"/>
-                <line x1="108" y1="0"   x2="108" y2="260"/>
-                <line x1="138" y1="0"   x2="138" y2="260"/>
-              </g>
-
-              <!-- Fog overlay (masked to show only uncleared areas) -->
-              <rect x="0" y="0" width="200" height="260"
-                class="fog-overlay"
-                clip-path="url(#district-clip)"
-                mask="url(#fog-mask)"/>
-
-              <!-- Walked path 1 (main trail) -->
-              <path class="walked-path p1"
-                d="M108,18 L108,68 L138,68 L138,98 L108,98 L108,128 L78,128 L78,158 L48,158"
-                clip-path="url(#district-clip)"/>
-
-              <!-- Walked path 2 (branch) -->
-              <path class="walked-path p2"
-                d="M78,98 L48,98 L48,68"
-                clip-path="url(#district-clip)"/>
-
-              <!-- Current position dot -->
-              <circle class="pos-dot" cx="48" cy="158" r="5"/>
-            </svg>
+            <canvas id="fog-canvas" class="fog-canvas" aria-hidden="true"></canvas>
           </div>
 
           <div class="app-nav">
@@ -221,6 +164,10 @@
 <!-- ═══════════════════════════════════════════ FEATURES -->
 <section class="features" id="features">
   <div class="container">
+    <div class="features__intro reveal">
+      <span class="section-label" data-key="features.label">Features</span>
+      <h2 class="section-heading" data-key="features.heading">GEBAUT MIT ABSICHT</h2>
+    </div>
     <div class="features__grid">
 
       <!-- Privacy card -->
@@ -243,7 +190,7 @@
           <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="30" cy="30" r="22" stroke="currentColor" stroke-opacity="0.18" stroke-width="3.5"/>
             <circle cx="30" cy="30" r="22" stroke="currentColor" stroke-width="3.5"
-              stroke-dasharray="90 48" stroke-linecap="round"
+              class="feature-ring"
               transform="rotate(-90 30 30)"/>
             <text x="30" y="35" text-anchor="middle" fill="currentColor" font-size="11" font-weight="700" font-family="system-ui, sans-serif">65%</text>
           </svg>

@@ -7,8 +7,8 @@
   /* Colors */
   --cream:       #F4F0EA;
   --cream-dark:  #EDE8DF;
-  --red:         #FF3450;
-  --red-hover:   #D42840;
+  --red:         #C82030;
+  --red-hover:   #A81828;
   --black:       #1C1A18;
   --gray:        #7A7570;
   --gray-light:  #B8B2AA;
@@ -33,7 +33,7 @@
 
   /* Layout */
   --max-w:  1200px;
-  --nav-h:  64px;
+  --nav-h:  70px;
 
   /* Motion */
   --t:      0.2s ease;
@@ -168,7 +168,7 @@ input, textarea { font: inherit; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--sp-lg);
+  padding: 0 48px;
   background: var(--cream);
   border-bottom: 1px solid transparent;
   z-index: 100;
@@ -195,7 +195,7 @@ input, textarea { font: inherit; }
 .nav__links {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 18px;
 }
 
 /* Lang toggle */
@@ -394,69 +394,12 @@ input, textarea { font: inherit; }
   min-height: 0;
 }
 
-.map-svg {
+/* Canvas fog animation */
+.fog-canvas {
   width: 100%;
   height: 100%;
-}
-
-/* SVG map styles */
-.district-base {
-  fill: #243347;
-  opacity: 1;
-}
-
-.streets line {
-  stroke: rgba(255,255,255,0.10);
-  stroke-width: 0.6;
-}
-
-.fog-overlay {
-  fill: #0d1117;
-  opacity: 0.86;
-}
-
-/* Fog-clearing animation: one cell slowly reveals itself */
-.fog-clear-anim {
-  animation: fog-clear 2.8s ease-in-out 5.8s infinite alternate;
-}
-@keyframes fog-clear {
-  from { fill: white; }
-  to   { fill: black; }
-}
-
-.walked-path {
-  fill: none;
-  stroke: var(--app-red);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Draw-in animations */
-.p1 {
-  stroke-dasharray: 420;
-  stroke-dashoffset: 420;
-  animation: draw 3.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s forwards;
-}
-.p2 {
-  stroke-dasharray: 140;
-  stroke-dashoffset: 140;
-  animation: draw 1.8s cubic-bezier(0.4, 0, 0.2, 1) 3.6s forwards;
-}
-
-@keyframes draw {
-  to { stroke-dashoffset: 0; }
-}
-
-.pos-dot {
-  fill: var(--app-red);
-  opacity: 0;
-  animation: appear 0.3s ease 5.2s forwards, pulse-dot 2s ease-in-out 5.5s infinite;
-}
-@keyframes appear { to { opacity: 1; } }
-@keyframes pulse-dot {
-  0%, 100% { r: 5; opacity: 1; }
-  50%       { r: 7.5; opacity: 0.6; }
+  display: block;
+  border-radius: 4px;
 }
 
 /* App bottom nav */
@@ -581,10 +524,24 @@ input, textarea { font: inherit; }
   padding: var(--sp-3xl) 0;
 }
 
+.features__intro {
+  margin-bottom: var(--sp-xl);
+}
+
 .features__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: var(--sp-lg);
+}
+
+/* Progress ring animate-in */
+.feature-ring {
+  stroke-dasharray: 0 138;
+  stroke-linecap: round;
+  transition: stroke-dasharray 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.feature-ring.animated {
+  stroke-dasharray: 90 48;
 }
 
 .feature-card {

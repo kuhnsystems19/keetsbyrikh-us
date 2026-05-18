@@ -2,9 +2,10 @@
 //  KEETS × RIK.HAUS — main.js
 // ================================================================
 
-// ── CONFIG ─────────────────────────────────────────────────────────
 const CONFIG = {
-  FORM_URL: 'YOUR_APPS_SCRIPT_URL_HERE',
+  // Formspree endpoints — replace with real IDs after creating forms at formspree.io
+  FOUNDING_FORM_URL: 'https://formspree.io/f/mykvynjy',
+  COLLAB_FORM_URL:   'https://formspree.io/f/xdajowgv',
 };
 
 // ── TRANSLATIONS ────────────────────────────────────────────────────
@@ -28,6 +29,8 @@ const T = {
     'step2.text':         'Jede Straße, die du begehst, leuchtet auf der Karte auf. Sieh in Echtzeit, welche Viertel du schon kennst – und wie viel noch im Dunkeln liegt.',
     'step3.title':        'Quests abschließen',
     'step3.text':         'Wähle ein Viertel als Quest. Verfolge deinen Fortschritt live. Erreich die 100% und hak das Viertel ab.',
+    'features.label':     'Features',
+    'features.heading':   'GEBAUT MIT ABSICHT',
     'feature1.title':     'Deine Daten. Nur auf deinem Gerät.',
     'feature1.text':      'Kein Cloud-Upload. Kein Tracking. Deine erkundete Route gehört nur dir — sie verlässt dein Telefon nie.',
     'feature2.title':     'Quests. Viertel. 100%.',
@@ -87,6 +90,8 @@ const T = {
     'step2.text':         'Every street you walk lights up on the map. See in real time which neighborhoods you\'ve covered — and how much is still in the dark.',
     'step3.title':        'Complete Quests',
     'step3.text':         'Pick a district as your quest. Track your progress live. Hit 100% and move on to the next one.',
+    'features.label':     'Features',
+    'features.heading':   'BUILT WITH INTENT',
     'feature1.title':     'Your data. On your device only.',
     'feature1.text':      'No cloud upload. No tracking. Your explored route is yours alone — it never leaves your phone.',
     'feature2.title':     'Quests. Districts. 100%.',
@@ -140,6 +145,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initForms();
   initScrollReveal();
   initBadgeMagnet();
+  initFogCanvas();
+  initFeatureRing();
 });
 
 // ── LANGUAGE ────────────────────────────────────────────────────────
@@ -167,9 +174,9 @@ function applyLang() {
 
 // ── NAV ─────────────────────────────────────────────────────────────
 function initNav() {
-  const nav        = document.getElementById('nav');
-  const hamburger  = document.getElementById('nav-hamburger');
-  const links      = document.getElementById('nav-links');
+  const nav       = document.getElementById('nav');
+  const hamburger = document.getElementById('nav-hamburger');
+  const links     = document.getElementById('nav-links');
 
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 16);
@@ -213,7 +220,6 @@ function initModal() {
     document.body.style.overflow = 'hidden';
     closeBtn?.focus();
   }
-
   function closeModal() {
     modal.hidden = true;
     document.body.style.overflow = '';
@@ -226,13 +232,12 @@ function initForms() {
     formId:    'founding-form',
     successId: 'founding-success',
     submitId:  'founding-submit',
+    url:       CONFIG.FOUNDING_FORM_URL,
     getPayload: (f) => ({
-      type:      'founding-access',
       firstname: f.firstname.value.trim(),
       lastname:  f.lastname.value.trim(),
       email:     f.email.value.trim(),
       platform:  f.platform?.value ?? '',
-      timestamp: new Date().toISOString(),
     }),
   });
 
@@ -240,17 +245,16 @@ function initForms() {
     formId:    'collab-form',
     successId: 'collab-success',
     submitId:  'collab-submit',
+    url:       CONFIG.COLLAB_FORM_URL,
     getPayload: (f) => ({
-      type:      'collab',
-      email:     f.email.value.trim(),
-      who:       f.who?.value ?? '',
-      message:   f.message?.value.trim() ?? '',
-      timestamp: new Date().toISOString(),
+      email:   f.email.value.trim(),
+      who:     f.who?.value ?? '',
+      message: f.message?.value.trim() ?? '',
     }),
   });
 }
 
-function setupForm({ formId, successId, submitId, getPayload }) {
+function setupForm({ formId, successId, submitId, url, getPayload }) {
   const form      = document.getElementById(formId);
   const successEl = document.getElementById(successId);
   const submitBtn = document.getElementById(submitId);
@@ -258,43 +262,31 @@ function setupForm({ formId, successId, submitId, getPayload }) {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
+    if (!form.checkValidity()) { form.reportValidity(); return; }
     setSubmitLoading(submitBtn, true);
-
     try {
-      await sendToSheet(getPayload(form));
+      await submitForm(url, getPayload(form));
       form.hidden      = true;
       successEl.hidden = false;
     } catch (err) {
       console.error('[keets] form error:', err);
       setSubmitLoading(submitBtn, false);
-      // Fallback: show success (data likely written despite opaque CORS response)
-      form.hidden      = true;
-      successEl.hidden = false;
     }
   });
 }
 
-async function sendToSheet(payload) {
-  const url = CONFIG.FORM_URL;
-
-  if (!url || url === 'YOUR_APPS_SCRIPT_URL_HERE') {
-    console.log('[keets] Form payload (not yet connected to sheet):', payload);
+async function submitForm(url, payload) {
+  if (!url || url.includes('YOUR_')) {
+    console.log('[keets] Form payload (not connected):', payload);
     await new Promise(r => setTimeout(r, 600));
     return;
   }
-
-  await fetch(url, {
+  const res = await fetch(url, {
     method:  'POST',
-    mode:    'no-cors',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
     body:    JSON.stringify(payload),
   });
+  if (!res.ok) throw new Error(`Formspree error: ${res.status}`);
 }
 
 function setSubmitLoading(btn, isLoading) {
@@ -306,33 +298,252 @@ function setSubmitLoading(btn, isLoading) {
   if (loading) loading.hidden = !isLoading;
 }
 
+// ── FOG CANVAS ANIMATION ─────────────────────────────────────────────
+function initFogCanvas() {
+  const canvas = document.getElementById('fog-canvas');
+  if (!canvas) return;
+
+  function setup() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const W   = canvas.offsetWidth;
+    const H   = canvas.offsetHeight;
+    if (!W || !H) return;
+
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+
+    // Offscreen buffer for fog — draw cells here (no blur), then blit once
+    const fogBuf = document.createElement('canvas');
+    fogBuf.width  = canvas.width;
+    fogBuf.height = canvas.height;
+    const fogCtx  = fogBuf.getContext('2d');
+    fogCtx.scale(dpr, dpr);
+
+    // Fog grid — each cell is CELL×CELL logical px
+    const CELL = 15;
+    const COLS = Math.ceil(W / CELL) + 2;
+    const ROWS = Math.ceil(H / CELL) + 2;
+    let fog = Array.from({ length: ROWS }, () => new Float32Array(COLS).fill(1));
+
+    // Walking path, normalized from 200×260 SVG coords to canvas
+    const sx = W / 200, sy = H / 260;
+    const pts = [
+      [108, 22], [108, 72], [138, 72], [138, 102],
+      [108, 102], [108, 132], [78, 132], [78, 162], [48, 162],
+    ].map(([x, y]) => [x * sx, y * sy]);
+
+    const segs  = pts.slice(1).map(([x, y], i) => Math.hypot(x - pts[i][0], y - pts[i][1]));
+    const TOTAL = segs.reduce((a, b) => a + b, 0);
+
+    function ptAt(len) {
+      let acc = 0;
+      for (let i = 0; i < segs.length; i++) {
+        if (acc + segs[i] >= len) {
+          const t = (len - acc) / segs[i];
+          return [
+            pts[i][0] + t * (pts[i + 1][0] - pts[i][0]),
+            pts[i][1] + t * (pts[i + 1][1] - pts[i][1]),
+          ];
+        }
+        acc += segs[i];
+      }
+      return pts[pts.length - 1];
+    }
+
+    // Soften fog around a point — creates organic clearing blobs
+    function clearAround(px, py) {
+      const R  = 2.2;
+      const cx = px / CELL, cy = py / CELL;
+      const r0 = Math.max(0, Math.floor(cy - R - 1));
+      const r1 = Math.min(ROWS - 1, Math.ceil(cy + R + 1));
+      const c0 = Math.max(0, Math.floor(cx - R - 1));
+      const c1 = Math.min(COLS - 1, Math.ceil(cx + R + 1));
+      for (let r = r0; r <= r1; r++) {
+        for (let c = c0; c <= c1; c++) {
+          const d = Math.hypot(c + 0.5 - cx, r + 0.5 - cy);
+          if (d < R) fog[r][c] = Math.max(0, fog[r][c] - 0.38 * (1 - d / R));
+        }
+      }
+    }
+
+    function drawBG() {
+      ctx.fillStyle = '#0a1018';
+      ctx.fillRect(0, 0, W, H);
+      // Subtle city blocks
+      const BS = 40, GS = 11;
+      ctx.fillStyle = '#131f2e';
+      for (let x = GS; x < W + BS; x += BS + GS) {
+        for (let y = GS; y < H + BS; y += BS + GS) {
+          ctx.fillRect(x, y, BS, BS);
+        }
+      }
+      // Street lines
+      ctx.strokeStyle = 'rgba(255,255,255,0.038)';
+      ctx.lineWidth   = 0.6;
+      for (let x = GS + BS; x < W + BS; x += BS + GS) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = GS + BS; y < H + BS; y += BS + GS) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+    }
+
+    function drawPath(len) {
+      if (len <= 0) return;
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      let acc = 0;
+      for (let i = 0; i < segs.length; i++) {
+        if (acc + segs[i] >= len) {
+          const t = (len - acc) / segs[i];
+          ctx.lineTo(
+            pts[i][0] + t * (pts[i + 1][0] - pts[i][0]),
+            pts[i][1] + t * (pts[i + 1][1] - pts[i][1])
+          );
+          break;
+        }
+        ctx.lineTo(pts[i + 1][0], pts[i + 1][1]);
+        acc += segs[i];
+      }
+      ctx.strokeStyle = '#FF3450';
+      ctx.lineWidth   = 2.2;
+      ctx.lineCap     = 'round';
+      ctx.lineJoin    = 'round';
+      ctx.stroke();
+    }
+
+    function drawDot(px, py, ts) {
+      const pulse = 0.5 + 0.5 * Math.sin(ts / 380);
+      // Outer glow ring
+      ctx.beginPath();
+      ctx.arc(px, py, 11 + pulse * 5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,52,80,${(0.14 + pulse * 0.09).toFixed(2)})`;
+      ctx.fill();
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(px, py, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#FF3450';
+      ctx.fill();
+      // Specular highlight
+      ctx.beginPath();
+      ctx.arc(px - 1, py - 1, 1.8, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.75)';
+      ctx.fill();
+    }
+
+    // Fog rendered with blur — cells drawn to offscreen buffer, blitted once
+    function drawFog() {
+      fogCtx.clearRect(0, 0, W, H);
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const a = fog[r][c];
+          if (a < 0.018) continue;
+          fogCtx.fillStyle = `rgba(10,16,24,${a.toFixed(2)})`;
+          fogCtx.fillRect(c * CELL - 1, r * CELL - 1, CELL + 2, CELL + 2);
+        }
+      }
+      ctx.save();
+      ctx.filter = 'blur(9px)';
+      ctx.drawImage(fogBuf, 0, 0, W, H);
+      ctx.restore();
+    }
+
+    let drawn = 0, t0 = null, raf;
+    const DELAY = 500;  // ms before path starts
+    const DUR   = 4600; // ms to draw full path
+    const HOLD  = 2400; // ms pause before loop restart
+
+    function reset() {
+      drawn = 0;
+      t0    = null;
+      for (let r = 0; r < ROWS; r++) fog[r].fill(1);
+    }
+
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      const el     = ts - t0;
+      const target = el > DELAY ? Math.min(TOTAL, ((el - DELAY) / DUR) * TOTAL) : 0;
+
+      // Smooth progressive fog clearing
+      if (target > drawn) {
+        const steps = 8;
+        for (let s = 0; s <= steps; s++) {
+          const l = drawn + ((target - drawn) * s) / steps;
+          clearAround(...ptAt(Math.min(l, TOTAL)));
+        }
+        drawn = target;
+      }
+
+      ctx.clearRect(0, 0, W, H);
+      drawBG();
+      drawFog();
+      drawPath(drawn);
+      if (drawn > 3) drawDot(...ptAt(drawn), ts);
+
+      if (drawn >= TOTAL) {
+        setTimeout(() => { reset(); raf = requestAnimationFrame(frame); }, HOLD);
+        return;
+      }
+      raf = requestAnimationFrame(frame);
+    }
+
+    // Only animate when canvas is in viewport
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        raf = requestAnimationFrame(frame);
+      } else {
+        cancelAnimationFrame(raf);
+      }
+    }, { threshold: 0.1 });
+    io.observe(canvas);
+  }
+
+  // Run after layout is complete
+  if (canvas.offsetWidth) {
+    setup();
+  } else {
+    requestAnimationFrame(() => setup());
+  }
+}
+
+// ── FEATURE RING ANIMATION ───────────────────────────────────────────
+function initFeatureRing() {
+  const ring = document.querySelector('.feature-ring');
+  if (!ring) return;
+
+  const card = ring.closest('.feature-card');
+  if (!card) return;
+
+  const io = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      ring.classList.add('animated');
+      io.disconnect();
+    }
+  }, { threshold: 0.4 });
+  io.observe(card);
+}
+
 // ── BADGE MAGNET ─────────────────────────────────────────────────────
 function initBadgeMagnet() {
   const badge = document.querySelector('.mission__badge');
   if (!badge || window.matchMedia('(pointer: coarse)').matches) return;
 
-  const RANGE    = 180;
-  const STRENGTH = 0.35;
-  const LERP     = 0.10;
-
-  let targetX = 0, targetY = 0;
-  let currentX = 0, currentY = 0;
+  const RANGE = 180, STRENGTH = 0.35, LERP = 0.10;
+  let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
 
   document.addEventListener('mousemove', (e) => {
     const rect    = badge.getBoundingClientRect();
     const centerX = rect.left + rect.width  / 2;
     const centerY = rect.top  + rect.height / 2;
-    const dx      = e.clientX - centerX;
-    const dy      = e.clientY - centerY;
-    const dist    = Math.sqrt(dx * dx + dy * dy);
-
+    const dx = e.clientX - centerX, dy = e.clientY - centerY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < RANGE) {
       const factor = (1 - dist / RANGE) * STRENGTH;
-      targetX = dx * factor;
-      targetY = dy * factor;
+      targetX = dx * factor; targetY = dy * factor;
     } else {
-      targetX = 0;
-      targetY = 0;
+      targetX = 0; targetY = 0;
     }
   }, { passive: true });
 
